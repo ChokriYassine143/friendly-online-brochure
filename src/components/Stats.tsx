@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChartBar, Users, Star, MessageSquare } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 
@@ -32,46 +32,55 @@ const Stats = () => {
   ];
 
   const [animatedNumbers, setAnimatedNumbers] = useState(stats.map(() => 0));
+  const statsRef = useRef(null);
+  const animationStarted = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            stats.forEach((stat, index) => {
-              const duration = 2000; // Animation duration in milliseconds
-              const steps = 60; // Number of steps in the animation
-              const increment = stat.number / steps;
-              let current = 0;
-              let step = 0;
+        const [entry] = entries;
+        if (entry.isIntersecting && !animationStarted.current) {
+          animationStarted.current = true;
+          
+          stats.forEach((stat, index) => {
+            const duration = 2000; // Animation duration in milliseconds
+            const steps = 60; // Number of steps in the animation
+            const increment = stat.number / steps;
+            let current = 0;
+            let step = 0;
 
-              const interval = setInterval(() => {
-                if (step < steps) {
-                  current += increment;
-                  setAnimatedNumbers(prev => 
-                    prev.map((num, i) => i === index ? Math.min(Math.round(current), stat.number) : num)
-                  );
-                  step++;
-                } else {
-                  clearInterval(interval);
-                }
-              }, duration / steps);
-            });
-            observer.disconnect();
-          }
-        });
+            const interval = setInterval(() => {
+              if (step < steps) {
+                current += increment;
+                setAnimatedNumbers(prev => 
+                  prev.map((num, i) => i === index ? Math.min(Math.round(current), stat.number) : num)
+                );
+                step++;
+              } else {
+                clearInterval(interval);
+              }
+            }, duration / steps);
+          });
+          
+          observer.disconnect();
+        }
       },
       { threshold: 0.1 }
     );
 
-    const container = document.querySelector(".stats-container");
-    if (container) observer.observe(container);
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
 
-    return () => observer.disconnect();
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stats-container">
+    <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stats-container">
       {stats.map((stat, index) => (
         <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <CardContent className="p-6 text-center">
