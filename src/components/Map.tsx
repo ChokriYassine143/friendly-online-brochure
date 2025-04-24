@@ -1,139 +1,19 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { useToast } from './ui/use-toast';
-
-const LOCAL_STORAGE_TOKEN_KEY = 'mapbox_token';
+import React from 'react';
 
 const Map = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [token, setToken] = useState<string>(() => localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '');
-  const [isTokenSubmitted, setIsTokenSubmitted] = useState<boolean>(!!localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY));
-  const { toast } = useToast();
-
-  const handleTokenSubmit = () => {
-    if (!token.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid Mapbox token",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token.trim());
-    setIsTokenSubmitted(true);
-    toast({
-      title: "Success",
-      description: "Mapbox token saved successfully"
-    });
-  };
-
-  const handleClearToken = () => {
-    localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
-    setToken('');
-    setIsTokenSubmitted(false);
-    
-    // Remove the map if it exists
-    if (map.current) {
-      map.current.remove();
-      map.current = null;
-    }
-    
-    toast({
-      title: "Token removed",
-      description: "Mapbox token has been removed"
-    });
-  };
-
-  useEffect(() => {
-    if (!mapContainer.current || !isTokenSubmitted || !token) return;
-
-    mapboxgl.accessToken = token;
-    
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [-73.9866, 40.7306], // Empire State Building coordinates
-        zoom: 15
-      });
-
-      // Add navigation controls
-      map.current.addControl(
-        new mapboxgl.NavigationControl(),
-        'top-right'
-      );
-
-      // Add marker
-      const marker = new mapboxgl.Marker()
-        .setLngLat([-73.9866, 40.7306])
-        .setPopup(new mapboxgl.Popup().setHTML("<h3>Arclight Designs HQ</h3><p>350 Fifth Avenue<br>New York, NY 10118</p>"))
-        .addTo(map.current);
-
-      // Show popup by default
-      marker.togglePopup();
-
-    } catch (error) {
-      console.error("Error initializing map:", error);
-      toast({
-        title: "Error",
-        description: "Failed to initialize map. Please check your token.",
-        variant: "destructive"
-      });
-      setIsTokenSubmitted(false);
-      localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
-    }
-
-    return () => {
-      map.current?.remove();
-    };
-  }, [isTokenSubmitted, token]);
-
   return (
-    <div className="relative w-full h-[400px] flex flex-col">
-      {!isTokenSubmitted ? (
-        <div className="absolute inset-0 bg-gray-100 rounded-lg shadow-lg flex flex-col items-center justify-center p-6">
-          <h3 className="text-lg font-semibold mb-4">Mapbox Access Token Required</h3>
-          <p className="text-sm text-gray-600 mb-4 text-center">
-            To view the map, please enter your Mapbox public token. 
-            You can find this at <a href="https://mapbox.com/" target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">mapbox.com</a> in the tokens section after creating an account.
-          </p>
-          <div className="w-full max-w-md space-y-4">
-            <Input 
-              type="text"
-              placeholder="Enter your Mapbox public token"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              className="w-full"
-            />
-            <Button 
-              onClick={handleTokenSubmit}
-              className="w-full"
-            >
-              Submit Token
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div ref={mapContainer} className="absolute inset-0 rounded-lg shadow-lg" />
-          <div className="absolute bottom-2 left-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleClearToken}
-              className="bg-white/80 hover:bg-white text-xs"
-            >
-              Change Token
-            </Button>
-          </div>
-        </>
-      )}
+    <div className="w-full h-[450px] rounded-lg overflow-hidden shadow-lg">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31317837.708851542!2d-18.55131872992743!3d32.81848641177864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sfr!2stn!4v1745490216285!5m2!1sfr!2stn" 
+        width="100%" 
+        height="100%" 
+        style={{ border: 0 }} 
+        allowFullScreen 
+        loading="lazy" 
+        referrerPolicy="no-referrer-when-downgrade"
+        className="w-full h-full"
+      />
     </div>
   );
 };
