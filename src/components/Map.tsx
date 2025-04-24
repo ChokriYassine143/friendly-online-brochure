@@ -53,15 +53,14 @@ const Map = () => {
   useEffect(() => {
     if (!mapContainer.current || !isTokenSubmitted || !token) return;
 
-    // Set the access token
     mapboxgl.accessToken = token;
     
     try {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/light-v11',
-        center: [-74.006, 40.7128], // New York coordinates
-        zoom: 13
+        center: [-73.9866, 40.7306], // Empire State Building coordinates
+        zoom: 15
       });
 
       // Add navigation controls
@@ -71,9 +70,14 @@ const Map = () => {
       );
 
       // Add marker
-      new mapboxgl.Marker()
-        .setLngLat([-74.006, 40.7128])
+      const marker = new mapboxgl.Marker()
+        .setLngLat([-73.9866, 40.7306])
+        .setPopup(new mapboxgl.Popup().setHTML("<h3>Arclight Designs HQ</h3><p>350 Fifth Avenue<br>New York, NY 10118</p>"))
         .addTo(map.current);
+
+      // Show popup by default
+      marker.togglePopup();
+
     } catch (error) {
       console.error("Error initializing map:", error);
       toast({
