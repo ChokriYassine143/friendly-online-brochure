@@ -4,6 +4,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ContactForm from '../components/ContactForm';
 import Map from '../components/Map';
+import Stats from '../components/Stats';
+import Team from '../components/Team';
+import Testimonials from '../components/Testimonials';
+import FAQ from '../components/FAQ';
 
 const projects = [
   {
@@ -47,13 +51,22 @@ const Index = () => {
       {/* Hero Section */}
       <section className="hero-section flex items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Arclight Designs</h1>
-          <p className="text-xl md:text-2xl">Where Vision Meets Architecture</p>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in">Arclight Designs</h1>
+          <p className="text-xl md:text-2xl animate-fade-in" style={{ animationDelay: '200ms' }}>Where Vision Meets Architecture</p>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="section-padding bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal-on-scroll">
+            <Stats />
+          </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="section-padding bg-gray-50">
+      <section id="about" className="section-padding">
         <div className="max-w-7xl mx-auto">
           <div className="reveal-on-scroll">
             <h2 className="text-3xl font-bold mb-8 text-center">About Us</h2>
@@ -62,6 +75,16 @@ const Index = () => {
               with sustainable practices. With over 15 years of experience, we create spaces that 
               inspire and endure.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section id="team" className="section-padding bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12 text-center">Our Team</h2>
+          <div className="reveal-on-scroll">
+            <Team />
           </div>
         </div>
       </section>
@@ -88,6 +111,26 @@ const Index = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="section-padding bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12 text-center">What Our Clients Say</h2>
+          <div className="reveal-on-scroll">
+            <Testimonials />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="section-padding">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+          <div className="reveal-on-scroll">
+            <FAQ />
           </div>
         </div>
       </section>

@@ -5,6 +5,15 @@ import { Button } from './ui/button';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const navItems = [
+    { href: "#about", label: "About" },
+    { href: "#team", label: "Team" },
+    { href: "#projects", label: "Projects" },
+    { href: "#testimonials", label: "Testimonials" },
+    { href: "#faq", label: "FAQ" },
+    { href: "#contact", label: "Contact" },
+  ];
+
   return (
     <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,15 +26,15 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            <a href="#about" className="text-gray-700 hover:text-primary transition-colors">
-              About
-            </a>
-            <a href="#projects" className="text-gray-700 hover:text-primary transition-colors">
-              Projects
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-primary transition-colors">
-              Contact
-            </a>
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-gray-700 hover:text-primary transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
 
           {/* Mobile menu button */}
@@ -54,15 +63,16 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white">
-            <a href="#about" className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors">
-              About
-            </a>
-            <a href="#projects" className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors">
-              Projects
-            </a>
-            <a href="#contact" className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors">
-              Contact
-            </a>
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
       )}
